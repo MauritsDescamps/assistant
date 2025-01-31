@@ -20,6 +20,5 @@ def main():
     # remove date from each line
     lines = [line.replace(f"{args.date} ", "") for line in history.split("\n")]
     history = "\n".join(lines)
-    print(history)
     response = time_sheets_assistant(history)
     print(response)

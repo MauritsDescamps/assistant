@@ -28,22 +28,22 @@ def get_browser_history(
             history_visits 
     """
 
-    print("Processing browser history")
+    logger.debug("Processing browser history")
     unix = datetime(1970, 1, 1)  # UTC
     cocoa = datetime(2001, 1, 1)  # UTC
     delta = cocoa - unix
     result = []
     for browser_history_path in browser_history_paths:
-        print(browser_history_path)
+        logger.debug(browser_history_path)
         conn = sqlite3.connect(browser_history_path)
         c = conn.cursor()
         try:
             c.execute(query)
         except sqlite3.OperationalError as e:
-            print(f"Error processing {browser_history_path}: {e}")
+            logger.error(f"Could not process {browser_history_path}: {e}")
             continue
         results = c.fetchall()
-        print(f"Found {len(results)} entries in {browser_history_path}")
+        logger.debug(f"Found {len(results)} entries in {browser_history_path}")
         for row in results:
             if row[1] is None:
                 continue

@@ -1,6 +1,6 @@
 from assistant.llm.prompts import TERMINAL_ASSISTANT_PROMPT, TIMESHEETS_PROMPT
 from langchain_ollama.llms import OllamaLLM
-from langchain.llms.openai import OpenAIChat
+from langchain_openai import ChatOpenAI
 import ollama
 
 # get langchain_openai version
@@ -27,7 +27,7 @@ def terminal_assistant(input_text: str, model: str) -> str:
 
 
 def time_sheets_assistant(history: str) -> str:
-    model = OpenAIChat(model="gpt-3.5-turbo")
-    # raise ValueError(model)
+    model = ChatOpenAI()
     chain = TIMESHEETS_PROMPT | model
-    return chain.invoke(history)
+    response = chain.invoke(history)
+    return response.content
