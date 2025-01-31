@@ -1,12 +1,12 @@
 import os
 from pathlib import Path
-from datetime import datetime, timezone
+from datetime import datetime, timezone, date
 from zoneinfo import ZoneInfo
 
 ZSH_HISTORY_PATH = Path(os.environ["HOME"]) / ".config/zsh/.zsh_history"
 
 
-def get_zsh_history() -> list[tuple[datetime, str]]:
+def get_zsh_history(date: date = None) -> list[tuple[datetime, str]]:
     result = []
     with open(ZSH_HISTORY_PATH, "r", encoding="latin-1") as f:
         # example:
@@ -25,4 +25,6 @@ def get_zsh_history() -> list[tuple[datetime, str]]:
                 dt_ts = datetime.fromtimestamp(int(ts), tz=timezone.utc)
                 dt_ts = dt_ts.astimezone(ZoneInfo("Europe/Brussels"))
                 result.append((dt_ts, command))
+    if date:
+        result = [(ts, resource) for ts, resource in result if ts.date() == date]
     return result

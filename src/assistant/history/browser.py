@@ -1,13 +1,15 @@
 import logging
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, date
 from zoneinfo import ZoneInfo
 import sqlite3
 
 logger = logging.getLogger(__name__)
 
 
-def get_browser_history(include_personal: bool = False) -> list[tuple[datetime, str]]:
+def get_browser_history(
+    include_personal: bool = False, date: date = None
+) -> list[tuple[datetime, str]]:
     browser_history_paths = []
     profiles_path = Path(
         "~/Library/Containers/com.apple.Safari/Data/Library/Safari/Profiles/"
@@ -49,6 +51,8 @@ def get_browser_history(include_personal: bool = False) -> list[tuple[datetime, 
             ts = ts.astimezone(ZoneInfo("Europe/Brussels"))
             title = row[1]
             if not title:
+                continue
+            if date and ts.date() != date:
                 continue
             result.append((ts, "Browser: " + title))
     return result
